@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS Team Tracker - Microsoft Edition</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1600px; margin: 0 auto; }
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        .header h1 { color: #0078D4; margin-bottom: 8px; font-size: 28px; font-weight: 600; }
+        .header p { color: #666; font-size: 14px; margin-bottom: 16px; }
+        .setup-box {
+            background: #e7f1f8;
+            border-left: 4px solid #0078D4;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+        .setup-box h3 { color: #0078D4; margin-bottom: 8px; font-size: 14px; font-weight: 600; }
+        .setup-box p { color: #004b7a; font-size: 13px; line-height: 1.5; }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            background: white;
+            border-radius: 12px;
+            padding: 16px 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            padding: 10px 18px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .tab-btn.active { color: #0078D4; border-bottom-color: #0078D4; }
+        .panel { display: none; }
+        .panel.active { display: block; }
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .kanban-column {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            min-height: 650px;
+        }
+        .kanban-header {
+            background: #0078D4;
+            color: white;
+            padding: 16px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .kanban-body {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #f9f9f9;
+        }
+        .task-card {
+            background: white;
+            border-left: 4px solid #0078D4;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .task-card:hover {
+            background: #f5f5f5;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .task-card.high { border-left-color: #d13438; background: #fff5f5; }
+        .task-card.medium { border-left-color: #ffb81c; background: #fffaf0; }
+        .task-card.low { border-left-color: #107c10; background: #f6fff3; }
+        .task-agent { font-weight: 600; color: #0078D4; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; }
+        .task-title { font-size: 13px; color: #333; font-weight: 500; margin-bottom: 6px; word-break: break-word; }
+        .task-hours { font-size: 11px; color: #666; margin-bottom: 6px; }
+        .task-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            background: #e0e0e0;
+            color: #333;
+        }
+        .task-status.completed { background: #107c10; color: white; }
+        .task-status.in-progress { background: #ffb81c; color: #333; }
+        .planning-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .planning-section h2 { color: #0078D4; margin-bottom: 20px; font-size: 18px; font-weight: 600; }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+        .form-group textarea { grid-column: 1 / -1; min-height: 80px; resize: vertical; }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary { background: #0078D4; color: white; }
+        .btn-primary:hover { background: #106ebe; }
+        .btn-secondary { background: #f0f0f0; color: #333; }
+        .btn-secondary:hover { background: #e0e0e0; }
+        .btn-group { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .metric-value { font-size: 36px; font-weight: 700; color: #0078D4; margin-bottom: 8px; }
+        .metric-label { font-size: 12px; color: #666; font-weight: 500; }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        .progress-fill { height: 100%; background: #0078D4; transition: width 0.3s; }
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            background: #0078D4;
+            color: white;
+        }
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+        }
+        tr:hover { background: #f5f5f5; }
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            background: #dff6dd;
+            color: #107c10;
+            border-left: 4px solid #107c10;
+        }
+        @media (max-width: 1200px) { .kanban-board { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .kanban-board { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 CS Team Tracker - Connected to SharePoint</h1>
+            <p>Web interface | Data saved in Microsoft 365 | Real-time sync</p>
+            <div class="setup-box">
+                <h3>⚙️ Setup Required</h3>
+                <p>
+                    <strong>IMPORTANT:</strong> This app needs Excel file in SharePoint to work. 
+                    Create the file first: Teams > Files > New > Excel workbook (name: "CS_Team_Weekly_Tracker").
+                    Then, enable Microsoft Graph API access for this app to read/write data.
+                </p>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('kanban')">📋 Kanban</button>
+            <button class="tab-btn" onclick="switchTab('planner')">➕ Add Task</button>
+            <button class="tab-btn" onclick="switchTab('dashboard')">📊 Dashboard</button>
+            <button class="tab-btn" onclick="switchTab('team')">👥 Team</button>
+            <button class="tab-btn" onclick="switchTab('settings')">⚙️ Settings</button>
+        </div>
+
+        <!-- KANBAN -->
+        <div class="panel active" id="tab-kanban">
+            <div class="alert">
+                ℹ️ This is a preview. Click "Connect to SharePoint" in Settings to enable real data sync.
+                Currently showing sample data from memory.
+            </div>
+            <div class="kanban-board" id="kanban-board"></div>
+        </div>
+
+        <!-- PLANNER -->
+        <div class="panel" id="tab-planner">
+            <div class="planning-section">
+                <h2>➕ Add New Task</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Agent</label>
+                        <select id="plan-agent">
+                            <option value="">Select...</option>
+                            <option value="Elías Zapata">Elías Zapata</option>
+                            <option value="Gabriela Cader">Gabriela Cader</option>
+                            <option value="Jacqueline Estrada">Jacqueline Estrada</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Task Type</label>
+                        <select id="plan-type">
+                            <option value="">Select...</option>
+                            <option value="Ticket Support">Ticket Support</option>
+                            <option value="Meetings">Meetings</option>
+                            <option value="Incidents">Incidents</option>
+                            <option value="Migration">Migration</option>
+                            <option value="Academy">Academy</option>
+                            <option value="QA">QA</option>
+                            <option value="Product">Product</option>
+                            <option value="FAQ">FAQ</option>
+                            <option value="Demos">Demos</option>
+                            <option value="Team Support">Team Support</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Day</label>
+                        <select id="plan-day">
+                            <option value="">Select...</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Hours</label>
+                        <input type="number" id="plan-hours" placeholder="2" min="0.25" step="0.25">
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="plan-priority">
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="plan-status">
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="plan-description" placeholder="Task description..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Comments</label>
+                    <textarea id="plan-comments" placeholder="Any notes..."></textarea>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="addTask()">➕ Add Task</button>
+                    <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div class="panel" id="tab-dashboard">
+            <div class="dashboard-grid">
+                <div class="metric-card">
+                    <div class="metric-value" id="total-tasks">0</div>
+                    <div class="metric-label">Total Tasks</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="completed-tasks">0</div>
+                    <div class="metric-label">Completed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="in-progress-tasks">0</div>
+                    <div class="metric-label">In Progress</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="completion-percent">0%</div>
+                    <div class="metric-label">Completion %</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="planning-section">
+                <h2>Weekly Summary</h2>
+                <div id="summary-text" style="font-size: 14px; line-height: 1.6; color: #333;"></div>
+            </div>
+        </div>
+
+        <!-- TEAM -->
+        <div class="panel" id="tab-team">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Agent</th>
+                        <th style="text-align: center;">Tasks</th>
+                        <th style="text-align: center;">Completed</th>
+                        <th style="text-align: center;">Hours</th>
+                        <th style="text-align: center;">Progress</th>
+                    </tr>
+                </thead>
+                <tbody id="team-tbody"></tbody>
+            </table>
+        </div>
+
+        <!-- SETTINGS -->
+        <div class="panel" id="tab-settings">
+            <div class="planning-section">
+                <h2>⚙️ SharePoint Connection</h2>
+                <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                    <p style="font-size: 13px; color: #666; line-height: 1.6; margin-bottom: 12px;">
+                        <strong>How to connect:</strong><br>
+                        1. Create Excel file in Teams: Teams > Your Team > Files > New > Excel workbook<br>
+                        2. Name it: "CS_Team_Weekly_Tracker"<br>
+                        3. Create sheets: Weekly Plan | Elías Zapata | Gabriela Cader | Jacqueline Estrada | Dashboard<br>
+                        4. Click button below to authenticate
+                    </p>
+                    <button class="btn btn-primary" onclick="connectSharePoint()">🔐 Connect to SharePoint</button>
+                </div>
+                <h3 style="color: #0078D4; margin: 20px 0 12px; font-size: 14px;">Current Status</h3>
+                <div style="padding: 12px; background: #fff9e6; border-left: 4px solid #ffb81c; border-radius: 4px;">
+                    <p style="font-size: 13px; color: #8a6600;">
+                        <strong>Not connected</strong><br>
+                        Data is currently saved in browser memory only.<br>
+                        Connect to SharePoint to enable cloud sync.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tasks = [];
+        const agents = ['Elías Zapata', 'Gabriela Cader', 'Jacqueline Estrada'];
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+        // Load sample data
+        function loadSampleData() {
+            tasks = [
+                {id: 1, agent: 'Elías Zapata', type: 'Ticket Support', description: 'HubSpot queue', day: 'Monday', hours: 2, priority: 'Medium', status: 'Pending', comments: '-'},
+                {id: 2, agent: 'Gabriela Cader', type: 'Product', description: 'Cart logic', day: 'Monday', hours: 2, priority: 'High', status: 'Pending', comments: '-'},
+                {id: 3, agent: 'Jacqueline Estrada', type: 'Ticket Support', description: '6 tickets', day: 'Monday', hours: 2, priority: 'Low', status: 'Pending', comments: '-'},
+            ];
+            render();
+        }
+
+        function render() {
+            renderKanban();
+            updateDashboard();
+            updateTeam();
+        }
+
+        function renderKanban() {
+            const board = document.getElementById('kanban-board');
+            board.innerHTML = '';
+            days.forEach(day => {
+                const dayTasks = tasks.filter(t => t.day === day);
+                const col = document.createElement('div');
+                col.className = 'kanban-column';
+                let html = `
+                    <div class="kanban-header">
+                        ${day}
+                        <div style="font-size: 11px; opacity: 0.9; margin-top: 4px;">${dayTasks.length} tasks · ${dayTasks.reduce((s, t) => s + t.hours, 0)}h</div>
+                    </div>
+                    <div class="kanban-body">
+                `;
+                dayTasks.forEach(t => {
+                    html += `
+                        <div class="task-card ${t.priority.toLowerCase()}">
+                            <div class="task-agent">${t.agent}</div>
+                            <div class="task-title">${t.description}</div>
+                            <div class="task-hours">${t.type} • ${t.hours}h</div>
+                            <span class="task-status ${t.status === 'Completed' ? 'completed' : t.status === 'In Progress' ? 'in-progress' : ''}">
+                                ${t.status === 'Completed' ? '✓' : t.status === 'In Progress' ? 'Progress' : 'Pending'}
+                            </span>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                col.innerHTML = html;
+                board.appendChild(col);
+            });
+        }
+
+        function updateDashboard() {
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.status === 'Completed').length;
+            const inProgress = tasks.filter(t => t.status === 'In Progress').length;
+            const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+            const hours = tasks.reduce((s, t) => s + t.hours, 0);
+
+            document.getElementById('total-tasks').textContent = total;
+            document.getElementById('completed-tasks').textContent = completed;
+            document.getElementById('in-progress-tasks').textContent = inProgress;
+            document.getElementById('completion-percent').textContent = percent + '%';
+            document.getElementById('progress-fill').style.width = percent + '%';
+            document.getElementById('summary-text').innerHTML = `
+                This week: <strong>${total} tasks</strong> with <strong>${hours}h</strong> total.
+                <strong>${completed}/${total}</strong> completed (${percent}%).
+                <strong>${inProgress}</strong> in progress.
+            `;
+        }
+
+        function updateTeam() {
+            const tbody = document.getElementById('team-tbody');
+            tbody.innerHTML = '';
+            agents.forEach(agent => {
+                const agentTasks = tasks.filter(t => t.agent === agent);
+                const completed = agentTasks.filter(t => t.status === 'Completed').length;
+                const hours = agentTasks.reduce((s, t) => s + t.hours, 0);
+                const percent = agentTasks.length > 0 ? Math.round((completed / agentTasks.length) * 100) : 0;
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${agent}</strong></td>
+                        <td style="text-align: center;">${agentTasks.length}</td>
+                        <td style="text-align: center;">${completed}</td>
+                        <td style="text-align: center;">${hours}h</td>
+                        <td style="text-align: center;">
+                            <div style="width: 100px; margin: 0 auto;">
+                                <div class="progress-bar" style="margin: 0;">
+                                    <div class="progress-fill" style="width: ${percent}%; background: ${percent >= 75 ? '#107c10' : percent >= 50 ? '#ffb81c' : '#d13438'};"></div>
+                                </div>
+                                <span style="font-size: 11px; color: #666;">${percent}%</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function addTask() {
+            const agent = document.getElementById('plan-agent').value;
+            const type = document.getElementById('plan-type').value;
+            const desc = document.getElementById('plan-description').value;
+            const day = document.getElementById('plan-day').value;
+            const hours = parseFloat(document.getElementById('plan-hours').value) || 1;
+            const prio = document.getElementById('plan-priority').value;
+            const status = document.getElementById('plan-status').value;
+            const comments = document.getElementById('plan-comments').value;
+
+            if (!agent || !type || !desc || !day) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            tasks.push({
+                id: Date.now(),
+                agent,
+                type,
+                description: desc,
+                day,
+                hours,
+                priority: prio,
+                status,
+                comments
+            });
+
+            render();
+            clearForm();
+            alert('✓ Task added!');
+        }
+
+        function clearForm() {
+            document.getElementById('plan-agent').value = '';
+            document.getElementById('plan-type').value = '';
+            document.getElementById('plan-description').value = '';
+            document.getElementById('plan-day').value = '';
+            document.getElementById('plan-hours').value = '';
+            document.getElementById('plan-priority').value = 'Medium';
+            document.getElementById('plan-status').value = 'Pending';
+            document.getElementById('plan-comments').value = '';
+        }
+
+        function switchTab(name) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + name).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function connectSharePoint() {
+            alert('SharePoint connection requires Microsoft authentication.\n\nFor now, this web app uses browser storage.\n\nTo enable real cloud sync:\n1. Create Excel file in Teams\n2. Contact your Microsoft 365 admin to enable API access\n3. Configure OAuth for this app');
+        }
+
+        // Initialize
+        window.addEventListener('load', loadSampleData);
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Backup files
+*.backup
+*.old
+~*
+
+# OS files
+.DS_Store
+Thumbs.db
+*.tmp
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node modules (if used)
+node_modules/
+package-lock.json
+
+# Logs
+*.log
