@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS Team Tracker Complete - Full Control System</title>
+    <title>CS Team Tracker Final - Complete Control System</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -206,61 +206,65 @@
     <div class="container">
         <div class="header">
             <div class="header-icon">📊</div>
-            <h1>CS Team Tracker Complete</h1>
-            <p>Comprehensive Control System: Weekly Planning + Daily Execution + Kanban + Comparison</p>
-            <div class="status-badge">✅ v3.0 | Complete System | Production Ready</div>
+            <h1>CS Team Tracker Final</h1>
+            <p>Complete Control System: Weekly Planning + Daily Execution + Kanban + Real-time Comparison</p>
+            <div class="status-badge">✅ v4.0 | Complete System | Production Ready</div>
         </div>
 
         <div class="features-grid">
-            <a href="CS_Team_Tracker_Complete.html" class="feature-card">
+            <a href="CS_Team_Tracker_Final_EN.html" class="feature-card">
                 <div>
-                    <div class="feature-icon">📋</div>
+                    <div class="feature-icon">🚀</div>
                     <h2>Complete System</h2>
-                    <span class="badge">All 4 Features</span>
-                    <p>Access all system areas: Daily Execution, Weekly Planning, Visual Kanban, and Weekly Comparison. Everything integrated in one place.</p>
+                    <span class="badge">5 Integrated Tabs</span>
+                    <p>Access all system areas: Add Tasks, Weekly Planning, Daily Activity, Kanban, and Comparison. Everything integrated in one place.</p>
                 </div>
                 <button class="btn">Open System →</button>
             </a>
 
-            <a href="https://raw.githubusercontent.com/Dalexcasteneda/cs-team-tracker/main/CS_Team_Weekly_Tracker_Advanced.xlsx" class="feature-card">
-                <div>
-                    <div class="feature-icon">📊</div>
-                    <h2>Updated Excel</h2>
-                    <span class="badge">Downloadable</span>
-                    <p>Excel with all sheets: Weekly Plan, Agents, Dashboard, and guides. Ready to use as backup for weekly data.</p>
-                </div>
-                <button class="btn">Download Excel →</button>
-            </a>
-
-            <a href="CS_TEAM_TRACKER_COMPLETE_GUIDE_EN.md" class="feature-card">
+            <div class="feature-card">
                 <div>
                     <div class="feature-icon">📖</div>
-                    <h2>Documentation</h2>
-                    <span class="badge">Complete Guide</span>
-                    <p>Technical documentation, workflows, use cases, and system architecture. Everything you need to know.</p>
+                    <h2>How It Works</h2>
+                    <span class="badge">Documentation</span>
+                    <p>Complete guide for coordinators and agents. Learn workflows, best practices, and how to use each feature effectively.</p>
                 </div>
-                <button class="btn">Read Docs →</button>
-            </a>
+                <button class="btn" onclick="scrollToSection('workflow')">View Guide →</button>
+            </div>
+
+            <div class="feature-card">
+                <div>
+                    <div class="feature-icon">⚡</div>
+                    <h2>Quick Start</h2>
+                    <span class="badge">5 Minutes</span>
+                    <p>Start immediately. No setup required. Coordinators plan tasks, agents log work, system handles everything else automatically.</p>
+                </div>
+                <button class="btn" onclick="scrollToSection('workflow')">Get Started →</button>
+            </div>
         </div>
 
         <div class="info-section">
-            <h3>🎯 4 Complete Tabs</h3>
+            <h3>🎯 5 Complete Tabs</h3>
             <div class="tabs-grid">
                 <div class="tab-item">
-                    <strong>📝 Daily Execution</strong>
-                    <p>Agents log daily work with dropdowns: hours, subtasks, status, comments.</p>
+                    <strong>➕ Add Tasks</strong>
+                    <p>Coordinator plans weekly tasks. Simple form with all fields: agent, type, day, hours, priority, status, description.</p>
                 </div>
                 <div class="tab-item">
                     <strong>📋 Weekly Planning</strong>
-                    <p>View all planned tasks by agent. Real-time updates from daily entries.</p>
+                    <p>See all planned tasks by agent. Visual cards showing total hours per agent and all assigned work.</p>
                 </div>
                 <div class="tab-item">
-                    <strong>🎯 Visual Kanban</strong>
-                    <p>Progress bars, subtasks completed, percentages. See work flowing in real-time.</p>
+                    <strong>📝 Daily Activity</strong>
+                    <p>Agents log their daily work. Enter: time worked, subtasks completed, status, and comments for each task.</p>
                 </div>
                 <div class="tab-item">
-                    <strong>📊 Weekly Comparison</strong>
-                    <p>Planned vs Executed. Automatic variance calculation and scope change detection.</p>
+                    <strong>🎯 Kanban</strong>
+                    <p>Real-time progress visualization. 4 columns by status with task cards showing planned vs executed hours.</p>
+                </div>
+                <div class="tab-item">
+                    <strong>📊 Comparison</strong>
+                    <p>Automatic analysis of Planned vs Executed. Variance calculation per task and agent with variance highlighting.</p>
                 </div>
             </div>
         </div>
@@ -269,60 +273,81 @@
             <h3>✨ Key Features</h3>
             <div class="feature-list">
                 <div class="feature-item">
+                    <strong>✓ Coordinator Planning</strong>
+                    <p>Professional task planning interface. Add, edit, and manage all weekly tasks in one place.</p>
+                </div>
+                <div class="feature-item">
                     <strong>✓ Agent-Friendly Interface</strong>
-                    <p>Simple dropdowns, no complex forms. 5 minutes per day to log work.</p>
+                    <p>Simple daily logging. Agents see only their tasks and can log work in 5 minutes per day.</p>
                 </div>
                 <div class="feature-item">
                     <strong>✓ Real-time Synchronization</strong>
-                    <p>Data updates instantly. No reloading needed. localStorage for persistence.</p>
-                </div>
-                <div class="feature-item">
-                    <strong>✓ Visual Progress Tracking</strong>
-                    <p>Progress bars, percentages, completion status. See work flowing daily.</p>
+                    <p>Data updates instantly across all tabs. Kanban and Comparison refresh as agents log work.</p>
                 </div>
                 <div class="feature-item">
                     <strong>✓ Automatic Analysis</strong>
-                    <p>Planned vs Executed automatically calculated. Variance detection and insights.</p>
+                    <p>Planned vs Executed automatically calculated. Variance detection per task and per agent.</p>
                 </div>
                 <div class="feature-item">
-                    <strong>✓ Scope Change Detection</strong>
-                    <p>Identify when work exceeds plan. Automatic alerts for overload.</p>
+                    <strong>✓ Visual Progress Tracking</strong>
+                    <p>Kanban board shows work flowing. See which tasks are pending, in progress, or completed.</p>
                 </div>
                 <div class="feature-item">
-                    <strong>✓ 100% GitHub Hosted</strong>
-                    <p>No servers, no external dependencies. GitHub Pages + localStorage.</p>
+                    <strong>✓ 100% Browser-Based</strong>
+                    <p>No servers, no external dependencies. All data in localStorage. Works offline. GitHub hosted.</p>
                 </div>
             </div>
         </div>
 
-        <div class="info-section">
+        <div class="info-section" id="workflow">
             <h3>📋 Complete Daily Workflow</h3>
             
-            <h4 style="color: #0078D4; margin-top: 20px; margin-bottom: 12px;">For Agents (5 minutes/day):</h4>
+            <h4 style="color: #0078D4; margin-top: 20px; margin-bottom: 12px;">Coordinator (Monday 9 AM)</h4>
             <div class="workflow-section">
                 <ol>
-                    <li>Open system and click "Daily Execution"</li>
-                    <li>Select your name from dropdown</li>
-                    <li>For each assigned task:
+                    <li>Open system and click "Add Tasks"</li>
+                    <li>Plan all tasks for the week:
                         <ul style="margin-top: 6px; margin-left: 20px;">
-                            <li>Enter hours worked today</li>
+                            <li>Select agent (Elías, Gabriela, Jacqueline)</li>
+                            <li>Select task type (Ticket Support, FAQ, etc)</li>
+                            <li>Select day (Monday-Friday)</li>
+                            <li>Enter hours</li>
+                            <li>Set priority and status</li>
+                            <li>Add description and comments</li>
+                        </ul>
+                    </li>
+                    <li>Click "Add Task" for each one</li>
+                    <li>Tasks appear in "Weekly Planning" automatically</li>
+                    <li>Tasks appear in "Kanban" automatically</li>
+                </ol>
+            </div>
+
+            <h4 style="color: #0078D4; margin-top: 20px; margin-bottom: 12px;">Agents (Monday-Friday, 5 min/day)</h4>
+            <div class="workflow-section">
+                <ol>
+                    <li>Open system and click "Daily Activity"</li>
+                    <li>Select their name</li>
+                    <li>For each task they worked on:
+                        <ul style="margin-top: 6px; margin-left: 20px;">
+                            <li>Enter time worked today</li>
                             <li>Enter subtasks completed</li>
                             <li>Select status (Pending/In Progress/Completed)</li>
                             <li>Add comments about blockers or progress</li>
                         </ul>
                     </li>
-                    <li>Click "Save Daily Activities"</li>
-                    <li>Data saved automatically, nothing else needed</li>
+                    <li>Click "Save Activities"</li>
+                    <li>Data updates in Kanban automatically</li>
                 </ol>
             </div>
 
-            <h4 style="color: #0078D4; margin-top: 20px; margin-bottom: 12px;">For Coordinators (Real-time monitoring):</h4>
+            <h4 style="color: #0078D4; margin-top: 20px; margin-bottom: 12px;">Coordinator (Friday 5 PM)</h4>
             <div class="workflow-section">
                 <ol>
-                    <li>Monitor "Weekly Planning" - see all tasks per agent</li>
-                    <li>Watch "Kanban" - see progress bars updating daily</li>
-                    <li>Review "Comparison" - see planned vs executed totals</li>
-                    <li>Friday 5 PM: Full weekly report ready with real data</li>
+                    <li>Open "Kanban" tab to see overall progress</li>
+                    <li>Open "Comparison" tab to see detailed analysis</li>
+                    <li>View Planned vs Executed hours</li>
+                    <li>See variance per task (highlighting overload)</li>
+                    <li>Generate weekly report with real data</li>
                 </ol>
             </div>
         </div>
@@ -330,19 +355,63 @@
         <div class="info-section">
             <h3>💡 Practical Example</h3>
             <p style="color: #666; margin-bottom: 16px;">
-                <strong>Task:</strong> "Update 20 FAQs of Payments Section" (10 hours planned for Gabriela)
+                <strong>Scenario:</strong> Gabriela Cader assigned "Update 20 FAQs of Payments" (10 hours planned)
             </p>
-            <p style="color: #666; margin-bottom: 16px;">
-                <strong>What Happens:</strong>
-            </p>
-            <ul style="color: #666; margin-bottom: 16px; margin-left: 20px;">
-                <li><strong>Monday:</strong> Gabriela logs 2.5h, 5 subtasks → Kanban shows 25% progress</li>
-                <li><strong>Tuesday:</strong> Gabriela logs +2h, +4 subtasks → Kanban shows 45% progress</li>
-                <li><strong>Wednesday:</strong> Client requests 10 more FAQs → Gabriela updates work</li>
-                <li><strong>Thursday:</strong> Gabriela logs +3h, +6 subtasks → System detects scope change</li>
-                <li><strong>Friday 5 PM:</strong> Coordinator sees: Planned 35h total, but gained 10 extra FAQs</li>
-                <li><strong>Report:</strong> "Scope increased by client request. Gabriela delivered 30 FAQs in 28h"</li>
-            </ul>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Time Logged</th>
+                        <th>Subtasks</th>
+                        <th>Status</th>
+                        <th>Kanban Shows</th>
+                        <th>Comparison Shows</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Monday</strong></td>
+                        <td>2.5h</td>
+                        <td>5</td>
+                        <td>In Progress</td>
+                        <td>2.5h of 10h | 25%</td>
+                        <td>Plan: 10h | Exec: 2.5h | Var: -7.5h</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tuesday</strong></td>
+                        <td>+2h</td>
+                        <td>+4</td>
+                        <td>In Progress</td>
+                        <td>4.5h of 10h | 45%</td>
+                        <td>Plan: 10h | Exec: 4.5h | Var: -5.5h</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Wednesday</strong></td>
+                        <td>+3h</td>
+                        <td>+6</td>
+                        <td>In Progress</td>
+                        <td>7.5h of 10h | 75%</td>
+                        <td>Plan: 10h | Exec: 7.5h | Var: -2.5h</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Thursday</strong></td>
+                        <td>+2.5h</td>
+                        <td>+5</td>
+                        <td>Completed</td>
+                        <td>10h of 10h | 100%</td>
+                        <td>Plan: 10h | Exec: 10h | Var: 0h</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Friday</strong></td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>Completed</td>
+                        <td>Task Completed</td>
+                        <td>✅ Within plan</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="info-section">
@@ -352,39 +421,44 @@
                     <tr>
                         <th>Feature</th>
                         <th>Before</th>
-                        <th>Now (Complete)</th>
+                        <th>Now (Final v4.0)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong>Daily Entry</strong></td>
-                        <td>Manual Excel editing</td>
-                        <td>✓ Simple dropdowns in web interface</td>
+                        <td><strong>Planning</strong></td>
+                        <td>Excel spreadsheet</td>
+                        <td>✓ Professional form interface</td>
                     </tr>
                     <tr>
-                        <td><strong>Planning View</strong></td>
-                        <td>Hidden in Excel</td>
-                        <td>✓ Clear visual by agent</td>
+                        <td><strong>Daily Entry</strong></td>
+                        <td>Manual Excel editing</td>
+                        <td>✓ Simple web form with dropdowns</td>
                     </tr>
                     <tr>
                         <td><strong>Progress Tracking</strong></td>
                         <td>None</td>
-                        <td>✓ Real-time Kanban with progress bars</td>
+                        <td>✓ Real-time Kanban visualization</td>
                     </tr>
                     <tr>
                         <td><strong>Analysis</strong></td>
                         <td>Manual calculation</td>
-                        <td>✓ Automatic comparison + insights</td>
+                        <td>✓ Automatic Comparison tab</td>
                     </tr>
                     <tr>
                         <td><strong>Scope Changes</strong></td>
                         <td>Not visible</td>
-                        <td>✓ Automatically detected and reported</td>
+                        <td>✓ Variance highlighting</td>
                     </tr>
                     <tr>
                         <td><strong>Reporting</strong></td>
                         <td>No real data</td>
-                        <td>✓ Reports with actual execution data</td>
+                        <td>✓ Reports with actual execution</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Updates</strong></td>
+                        <td>Manual</td>
+                        <td>✓ Real-time synchronization</td>
                     </tr>
                 </tbody>
             </table>
@@ -393,47 +467,24 @@
         <div class="info-section">
             <h3>🚀 Quick Start</h3>
             <div class="workflow-section">
-                <p><strong>Today:</strong> Open "Complete System" and explore all 4 tabs</p>
-                <p style="margin-top: 12px;"><strong>Monday:</strong> Agents start logging daily work in "Daily Execution"</p>
-                <p style="margin-top: 12px;"><strong>Daily:</strong> Coordinators monitor "Kanban" for progress</p>
-                <p style="margin-top: 12px;"><strong>Friday:</strong> Review "Comparison" for weekly report</p>
+                <p><strong>Step 1:</strong> Click "Open System" button above</p>
+                <p style="margin-top: 12px;"><strong>Step 2:</strong> Monday - Add tasks for the week using "Add Tasks" tab</p>
+                <p style="margin-top: 12px;"><strong>Step 3:</strong> Monday-Friday - Agents log daily work in "Daily Activity" tab</p>
+                <p style="margin-top: 12px;"><strong>Step 4:</strong> Watch "Kanban" update in real-time</p>
+                <p style="margin-top: 12px;"><strong>Step 5:</strong> Friday - Review "Comparison" for weekly report</p>
             </div>
         </div>
 
-        <div class="info-section">
-            <h3>✅ Who Uses What</h3>
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Role</th>
-                        <th>Primary Use</th>
-                        <th>Features</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Agents</strong><br>(Elías, Gabriela, Jacqueline)</td>
-                        <td>Log daily work</td>
-                        <td>Daily Execution tab + Kanban view</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Coordinator</strong></td>
-                        <td>Monitor & report</td>
-                        <td>All 4 tabs (Planning, Execution, Kanban, Comparison)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Management</strong></td>
-                        <td>Weekly reports</td>
-                        <td>Comparison data + insights</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
         <div class="footer">
-            <p>CS Team Tracker Complete v3.0 | Comprehensive Control System</p>
-            <p>100% hosted on GitHub | Free | No external dependencies | Enterprise-Ready</p>
+            <p>CS Team Tracker Final v4.0 | Complete Control System</p>
+            <p>100% Browser-Based | Free | No Servers | Enterprise-Ready</p>
         </div>
     </div>
+
+    <script>
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>
