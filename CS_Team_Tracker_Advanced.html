@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS Team Tracker Advanced - Planning & Execution</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1900px; margin: 0 auto; }
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        .header h1 { color: #0078D4; margin-bottom: 8px; font-size: 28px; font-weight: 600; }
+        .header p { color: #666; font-size: 14px; }
+        .status {
+            background: #dff6dd;
+            color: #107c10;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            border-left: 4px solid #107c10;
+            font-size: 13px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 12px;
+            background: white;
+            border-radius: 12px;
+            padding: 16px 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            padding: 10px 18px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .tab-btn.active { color: #0078D4; border-bottom-color: #0078D4; }
+        
+        .panel { display: none; }
+        .panel.active { display: block; }
+        
+        /* PLANNING PANEL */
+        .planning-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .planning-section h2 {
+            color: #0078D4;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .agent-planning-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .agent-planning-card {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .agent-planning-card:hover {
+            border-color: #0078D4;
+            background: #f5f9ff;
+        }
+        .agent-planning-card h3 {
+            color: #0078D4;
+            margin-bottom: 16px;
+            font-size: 16px;
+            border-bottom: 2px solid #0078D4;
+            padding-bottom: 10px;
+        }
+        
+        .planning-input-group {
+            margin-bottom: 12px;
+        }
+        .planning-input-group label {
+            display: block;
+            font-size: 12px;
+            color: #333;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        .planning-input-group input,
+        .planning-input-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .planning-summary {
+            background: white;
+            border-left: 4px solid #0078D4;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 12px;
+            font-size: 12px;
+        }
+        .planning-summary .label { color: #666; }
+        .planning-summary .value { color: #0078D4; font-weight: 600; }
+        
+        /* COMPARISON PANEL */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .comparison-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .comparison-header {
+            background: #0078D4;
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .comparison-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 4px solid #e0e0e0;
+        }
+        .comparison-metric.positive { border-left-color: #107c10; }
+        .comparison-metric.negative { border-left-color: #d13438; }
+        
+        .comparison-label { font-size: 12px; color: #666; font-weight: 500; }
+        .comparison-value { font-size: 14px; color: #333; font-weight: 600; }
+        .comparison-variance { font-size: 11px; margin-top: 4px; }
+        
+        .variance-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .variance-badge.positive { background: #dff6dd; color: #107c10; }
+        .variance-badge.negative { background: #fff5f5; color: #d13438; }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .chart-container h3 {
+            color: #0078D4;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            background: #0078D4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .btn:hover { background: #106ebe; }
+        
+        .table-responsive {
+            overflow-x: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background: #0078D4;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 12px;
+        }
+        tr:hover { background: #f9f9f9; }
+        
+        .insight-box {
+            background: white;
+            border-left: 4px solid #ffb81c;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .insight-box.high { border-left-color: #d13438; }
+        .insight-box.medium { border-left-color: #ffb81c; }
+        .insight-box.low { border-left-color: #107c10; }
+        
+        .insight-title { font-weight: 600; color: #333; margin-bottom: 4px; }
+        .insight-detail { font-size: 12px; color: #666; }
+        
+        @media (max-width: 1200px) {
+            .agent-planning-grid { grid-template-columns: 1fr; }
+            .comparison-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 CS Team Tracker Advanced</h1>
+            <p>Sistema avanzado con Planificación, Ejecución y Análisis Comparativo</p>
+            <div class="status">
+                ✅ Planeado vs Realizado | 📈 Análisis de Variaciones | 📊 Métricas
+            </div>
+        </div>
+
+        <button class="btn" onclick="loadAndRender()" style="margin-bottom: 20px;">🔄 Cargar datos de Excel</button>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('planning')">📋 Planificación Semanal</button>
+            <button class="tab-btn" onclick="switchTab('execution')">📝 Ejecución Diaria</button>
+            <button class="tab-btn" onclick="switchTab('comparison')">📊 Comparativo Semanal</button>
+            <button class="tab-btn" onclick="switchTab('kanban')">🎯 Kanban Visual</button>
+        </div>
+
+        <!-- PLANNING TAB -->
+        <div class="panel active" id="tab-planning">
+            <div class="planning-section">
+                <h2>📋 Planificación de la Semana</h2>
+                <p style="color: #666; margin-bottom: 20px; font-size: 13px;">
+                    Planifica el tiempo estimado para cada agente según el tipo y cantidad de actividades.
+                    Esto servirá como base para comparar con lo ejecutado al final de la semana.
+                </p>
+                <div class="agent-planning-grid" id="planningGrid"></div>
+                <button class="btn" onclick="savePlanning()" style="margin-top: 20px;">💾 Guardar Planificación</button>
+            </div>
+        </div>
+
+        <!-- EXECUTION TAB -->
+        <div class="panel" id="tab-execution">
+            <div class="planning-section">
+                <h2>📝 Ejecución Diaria</h2>
+                <div style="margin-bottom: 20px;">
+                    <label style="color: #333; font-weight: 600;">Selecciona agente:</label>
+                    <select id="executionAgentSelect" onchange="loadAgentExecution()" style="padding: 10px; width: 100%; max-width: 300px; border: 2px solid #0078D4; border-radius: 6px; margin-top: 8px;">
+                        <option value="">-- Selecciona agente --</option>
+                        <option value="Elías Zapata">Elías Zapata</option>
+                        <option value="Gabriela Cader">Gabriela Cader</option>
+                        <option value="Jacqueline Estrada">Jacqueline Estrada</option>
+                    </select>
+                </div>
+                <div id="executionTasksContainer"></div>
+            </div>
+        </div>
+
+        <!-- COMPARISON TAB -->
+        <div class="panel" id="tab-comparison">
+            <div class="planning-section">
+                <h2>📊 Comparativo Semanal: Planeado vs Realizado</h2>
+                <p style="color: #666; margin-bottom: 20px; font-size: 13px;">
+                    Análisis de variaciones entre lo planificado y lo ejecutado. Identifica desviaciones y ajustes necesarios.
+                </p>
+                <div id="comparisonContainer"></div>
+                <div id="insightsContainer" style="margin-top: 30px;"></div>
+            </div>
+        </div>
+
+        <!-- KANBAN TAB -->
+        <div class="panel" id="tab-kanban">
+            <div class="kanban-board" id="kanban-board"></div>
+        </div>
+    </div>
+
+    <script>
+        const agents = ['Elías Zapata', 'Gabriela Cader', 'Jacqueline Estrada'];
+        const taskTypes = ['Ticket Support', 'Meetings', 'Incidents', 'Migration', 'Academy', 'QA', 'Product', 'FAQ', 'Demos', 'Team Support'];
+        
+        let allTasks = [];
+        let weeklyPlanning = JSON.parse(localStorage.getItem('weeklyPlanning')) || {};
+        let dailyExecution = JSON.parse(localStorage.getItem('dailyExecution')) || {};
+
+        async function loadAndRender() {
+            try {
+                const excelUrl = 'https://raw.githubusercontent.com/Dalexcasteneda/cs-team-tracker/main/CS_Team_Weekly_Tracker.xlsx';
+                const response = await fetch(excelUrl);
+                if (!response.ok) throw new Error('Error descargando Excel');
+
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                const worksheet = workbook.Sheets['Weekly Plan'];
+
+                if (!worksheet) throw new Error('Hoja "Weekly Plan" no encontrada');
+
+                const data = XLSX.utils.sheet_to_json(worksheet);
+                allTasks = data.map((row, idx) => ({
+                    id: idx,
+                    agent: row.Agent || '',
+                    type: row['Task Type'] || '',
+                    description: row.Description || '',
+                    day: row.Day || '',
+                    hours: parseFloat(row.Hours) || 0,
+                    priority: row.Priority || 'Media',
+                    status: row.Status || 'Pendiente',
+                    comments: row.Comments || ''
+                })).filter(t => t.agent && t.description);
+
+                renderPlanning();
+                renderComparison();
+                renderKanban();
+
+            } catch (error) {
+                alert('Error: ' + error.message);
+                console.error('Error:', error);
+            }
+        }
+
+        function renderPlanning() {
+            const grid = document.getElementById('planningGrid');
+            grid.innerHTML = '';
+
+            agents.forEach(agent => {
+                const agentTasks = allTasks.filter(t => t.agent === agent);
+                const agentPlanning = weeklyPlanning[agent] || {};
+                
+                let html = `
+                    <div class="agent-planning-card">
+                        <h3>${agent}</h3>
+                        <div class="planning-input-group">
+                            <label>Ticket Support (estimado de horas/semana):</label>
+                            <input type="number" id="plan_${agent}_ticket" min="0" step="0.5" 
+                                   value="${agentPlanning.ticket || 0}" placeholder="Ej: 15">
+                        </div>
+                        <div class="planning-input-group">
+                            <label>Meetings (estimado de horas/semana):</label>
+                            <input type="number" id="plan_${agent}_meetings" min="0" step="0.5" 
+                                   value="${agentPlanning.meetings || 0}" placeholder="Ej: 5">
+                        </div>
+                        <div class="planning-input-group">
+                            <label>Incidents (estimado de horas/semana):</label>
+                            <input type="number" id="plan_${agent}_incidents" min="0" step="0.5" 
+                                   value="${agentPlanning.incidents || 0}" placeholder="Ej: 3">
+                        </div>
+                        <div class="planning-input-group">
+                            <label>Product/Development (estimado de horas/semana):</label>
+                            <input type="number" id="plan_${agent}_product" min="0" step="0.5" 
+                                   value="${agentPlanning.product || 0}" placeholder="Ej: 10">
+                        </div>
+                        <div class="planning-input-group">
+                            <label>Otras actividades (estimado de horas/semana):</label>
+                            <input type="number" id="plan_${agent}_other" min="0" step="0.5" 
+                                   value="${agentPlanning.other || 0}" placeholder="Ej: 5">
+                        </div>
+                        
+                        <div class="planning-summary">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span class="label">Total planificado:</span>
+                                <span class="value" id="total_${agent}">
+                                    ${(parseFloat(agentPlanning.ticket || 0) + 
+                                       parseFloat(agentPlanning.meetings || 0) + 
+                                       parseFloat(agentPlanning.incidents || 0) + 
+                                       parseFloat(agentPlanning.product || 0) + 
+                                       parseFloat(agentPlanning.other || 0)).toFixed(1)}h
+                                </span>
+                            </div>
+                            <div style="font-size: 11px; color: #999;">
+                                Capacidad semanal: 40h
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += html;
+            });
+
+            // Update totals on change
+            agents.forEach(agent => {
+                ['ticket', 'meetings', 'incidents', 'product', 'other'].forEach(type => {
+                    const input = document.getElementById(`plan_${agent}_${type}`);
+                    if (input) {
+                        input.addEventListener('change', () => updatePlanningTotal(agent));
+                    }
+                });
+            });
+        }
+
+        function updatePlanningTotal(agent) {
+            const total = ['ticket', 'meetings', 'incidents', 'product', 'other']
+                .reduce((sum, type) => {
+                    const val = parseFloat(document.getElementById(`plan_${agent}_${type}`).value) || 0;
+                    return sum + val;
+                }, 0);
+            
+            document.getElementById(`total_${agent}`).textContent = total.toFixed(1) + 'h';
+        }
+
+        function savePlanning() {
+            agents.forEach(agent => {
+                weeklyPlanning[agent] = {
+                    ticket: parseFloat(document.getElementById(`plan_${agent}_ticket`).value) || 0,
+                    meetings: parseFloat(document.getElementById(`plan_${agent}_meetings`).value) || 0,
+                    incidents: parseFloat(document.getElementById(`plan_${agent}_incidents`).value) || 0,
+                    product: parseFloat(document.getElementById(`plan_${agent}_product`).value) || 0,
+                    other: parseFloat(document.getElementById(`plan_${agent}_other`).value) || 0
+                };
+            });
+
+            localStorage.setItem('weeklyPlanning', JSON.stringify(weeklyPlanning));
+            alert('✅ Planificación guardada correctamente');
+            renderComparison();
+        }
+
+        function loadAgentExecution() {
+            const agent = document.getElementById('executionAgentSelect').value;
+            const container = document.getElementById('executionTasksContainer');
+            
+            if (!agent) {
+                container.innerHTML = '<p style="color: #999;">Selecciona un agente</p>';
+                return;
+            }
+
+            const agentTasks = allTasks.filter(t => t.agent === agent);
+            
+            let html = '<div class="agent-planning-grid">';
+            agentTasks.forEach((task, idx) => {
+                html += `
+                    <div class="agent-planning-card">
+                        <h3>${task.description}</h3>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 8px;">
+                            <strong>Tipo:</strong> ${task.type} | <strong>Día:</strong> ${task.day}
+                        </p>
+                        
+                        <div class="planning-input-group">
+                            <label>Horas ejecutadas:</label>
+                            <input type="number" id="exec_hours_${idx}" min="0" step="0.5" value="0" placeholder="Ej: 2.5">
+                        </div>
+                        
+                        <div class="planning-input-group">
+                            <label>Subtareas completadas:</label>
+                            <input type="number" id="exec_subtasks_${idx}" min="0" value="0" placeholder="Ej: 3">
+                        </div>
+                        
+                        <div class="planning-input-group">
+                            <label>Estado:</label>
+                            <select id="exec_status_${idx}">
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="En Progreso" selected>En Progreso</option>
+                                <option value="Completada">Completada</option>
+                            </select>
+                        </div>
+                        
+                        <div class="planning-input-group">
+                            <label>Comentarios:</label>
+                            <textarea id="exec_comment_${idx}" style="height: 60px;" placeholder="Notas..."></textarea>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function renderComparison() {
+            const container = document.getElementById('comparisonContainer');
+            const insightsContainer = document.getElementById('insightsContainer');
+            
+            let comparisonHtml = '<div class="comparison-grid">';
+            let insights = [];
+
+            agents.forEach(agent => {
+                const planning = weeklyPlanning[agent] || {};
+                const agentTasks = allTasks.filter(t => t.agent === agent);
+                
+                let executedByType = {
+                    ticket: 0,
+                    meetings: 0,
+                    incidents: 0,
+                    product: 0,
+                    other: 0
+                };
+
+                // Simulate execution from tasks (in real scenario, this would come from daily entries)
+                agentTasks.forEach(task => {
+                    const type = task.type.toLowerCase().replace(' ', '_');
+                    if (type.includes('ticket')) executedByType.ticket += task.hours;
+                    else if (type.includes('meeting')) executedByType.meetings += task.hours;
+                    else if (type.includes('incident')) executedByType.incidents += task.hours;
+                    else if (type.includes('product') || type.includes('dev')) executedByType.product += task.hours;
+                    else executedByType.other += task.hours;
+                });
+
+                const plannedTotal = (planning.ticket || 0) + (planning.meetings || 0) + 
+                                   (planning.incidents || 0) + (planning.product || 0) + (planning.other || 0);
+                const executedTotal = Object.values(executedByType).reduce((a, b) => a + b, 0);
+                const variance = executedTotal - plannedTotal;
+                const variancePercent = plannedTotal > 0 ? ((variance / plannedTotal) * 100).toFixed(1) : 0;
+
+                comparisonHtml += `
+                    <div class="comparison-card">
+                        <div class="comparison-header">${agent}</div>
+                        
+                        <div class="comparison-metric ${variance > 2 ? 'negative' : variance < -2 ? 'positive' : ''}">
+                            <span class="comparison-label">Ticket Support</span>
+                            <span class="comparison-value">
+                                ${(planning.ticket || 0).toFixed(1)}h → ${executedByType.ticket.toFixed(1)}h
+                            </span>
+                        </div>
+
+                        <div class="comparison-metric">
+                            <span class="comparison-label">Meetings</span>
+                            <span class="comparison-value">
+                                ${(planning.meetings || 0).toFixed(1)}h → ${executedByType.meetings.toFixed(1)}h
+                            </span>
+                        </div>
+
+                        <div class="comparison-metric">
+                            <span class="comparison-label">Incidents</span>
+                            <span class="comparison-value">
+                                ${(planning.incidents || 0).toFixed(1)}h → ${executedByType.incidents.toFixed(1)}h
+                            </span>
+                        </div>
+
+                        <div class="comparison-metric">
+                            <span class="comparison-label">Product/Dev</span>
+                            <span class="comparison-value">
+                                ${(planning.product || 0).toFixed(1)}h → ${executedByType.product.toFixed(1)}h
+                            </span>
+                        </div>
+
+                        <div class="comparison-metric">
+                            <span class="comparison-label">Otras</span>
+                            <span class="comparison-value">
+                                ${(planning.other || 0).toFixed(1)}h → ${executedByType.other.toFixed(1)}h
+                            </span>
+                        </div>
+
+                        <hr style="margin: 12px 0; border: none; border-top: 1px solid #e0e0e0;">
+
+                        <div class="comparison-metric ${variance > 2 ? 'negative' : variance < -2 ? 'positive' : ''}">
+                            <span class="comparison-label"><strong>Total Semanal</strong></span>
+                            <span class="comparison-value">
+                                ${plannedTotal.toFixed(1)}h → ${executedTotal.toFixed(1)}h
+                                <span class="variance-badge ${variance > 0 ? 'negative' : 'positive'}">
+                                    ${variance > 0 ? '+' : ''}${variance.toFixed(1)}h (${variancePercent}%)
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                `;
+
+                // Generate insights
+                if (variance > 2) {
+                    insights.push({
+                        agent: agent,
+                        type: 'high',
+                        title: '⚠️ Sobrecarga de trabajo',
+                        detail: `${agent} ejecutó ${variance.toFixed(1)}h más de lo planificado. Considera revisar solicitudes de stakeholders.`
+                    });
+                } else if (variance < -2) {
+                    insights.push({
+                        agent: agent,
+                        type: 'low',
+                        title: '✅ Debajo de lo planificado',
+                        detail: `${agent} ejecutó ${Math.abs(variance).toFixed(1)}h menos. Se completó dentro del alcance.`
+                    });
+                } else {
+                    insights.push({
+                        agent: agent,
+                        type: 'medium',
+                        title: '✓ Dentro de lo estimado',
+                        detail: `${agent} ejecutó prácticamente lo planificado. Buena estimación.`
+                    });
+                }
+            });
+
+            comparisonHtml += '</div>';
+            container.innerHTML = comparisonHtml;
+
+            // Render insights
+            let insightsHtml = '<h3 style="color: #0078D4; margin-bottom: 16px;">📌 Análisis y Recomendaciones</h3>';
+            insights.forEach(insight => {
+                insightsHtml += `
+                    <div class="insight-box ${insight.type}">
+                        <div class="insight-title">${insight.title}</div>
+                        <div class="insight-detail">${insight.detail}</div>
+                    </div>
+                `;
+            });
+            insightsContainer.innerHTML = insightsHtml;
+        }
+
+        function renderKanban() {
+            const board = document.getElementById('kanban-board');
+            board.style.display = 'grid';
+            board.style.gridTemplateColumns = 'repeat(4, 1fr)';
+            board.style.gap = '16px';
+            board.style.marginBottom = '24px';
+            board.innerHTML = '';
+            
+            const statuses = ['Pendiente', 'En Progreso', 'Completada'];
+            
+            statuses.forEach(status => {
+                const tasks = allTasks.filter(t => t.status === status);
+                const col = document.createElement('div');
+                col.style.cssText = 'background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; flex-direction: column; min-height: 600px;';
+                
+                let html = `
+                    <div style="background: #0078D4; color: white; padding: 16px; text-align: center; font-weight: 600;">
+                        ${status}
+                        <div style="font-size: 11px; opacity: 0.9; margin-top: 4px;">${tasks.length} tareas</div>
+                    </div>
+                    <div style="flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #f9f9f9;">
+                `;
+
+                tasks.forEach(task => {
+                    html += `
+                        <div style="background: white; border-left: 4px solid #0078D4; border-radius: 8px; padding: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+                            <div style="font-weight: 600; color: #333; font-size: 13px; margin-bottom: 6px;">${task.description}</div>
+                            <div style="font-size: 11px; color: #666; margin-bottom: 6px;">
+                                👤 ${task.agent} | 🎯 ${task.type}
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 11px; color: #666;">${task.hours}h</span>
+                                <span style="font-size: 11px; color: #999;">${task.day}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += '</div>';
+                col.innerHTML = html;
+                board.appendChild(col);
+            });
+        }
+
+        function switchTab(name) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + name).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Load on page open
+        window.addEventListener('load', loadAndRender);
+    </script>
+</body>
+</html>

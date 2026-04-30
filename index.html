@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS Team Tracker - Repository Home</title>
+    <title>CS Team Tracker Advanced - Complete System</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -12,7 +12,8 @@
             min-height: 100vh;
             padding: 40px 20px;
         }
-        .container { max-width: 1000px; margin: 0 auto; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
         .header {
             background: white;
             border-radius: 16px;
@@ -44,13 +45,14 @@
             font-weight: 600;
             margin-top: 16px;
         }
-        .links {
+        
+        .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
             margin-bottom: 40px;
         }
-        .link-card {
+        .feature-card {
             background: white;
             border-radius: 12px;
             padding: 32px;
@@ -62,24 +64,35 @@
             flex-direction: column;
             justify-content: space-between;
         }
-        .link-card:hover {
+        .feature-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 12px 32px rgba(0,0,0,0.15);
         }
-        .link-card-icon { font-size: 48px; margin-bottom: 16px; }
-        .link-card h2 { 
+        .feature-icon { font-size: 48px; margin-bottom: 16px; }
+        .feature-card h2 { 
             color: #0078D4; 
             margin-bottom: 12px; 
             font-size: 20px;
             font-weight: 600;
         }
-        .link-card p { 
+        .feature-card p { 
             color: #666; 
             font-size: 14px; 
             margin-bottom: 20px;
             line-height: 1.6;
             flex-grow: 1;
         }
+        .feature-card .badge {
+            display: inline-block;
+            background: #e0e8ff;
+            color: #0078D4;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
         .btn {
             display: inline-block;
             background: #0078D4;
@@ -97,6 +110,14 @@
             background: #106ebe;
             transform: translateY(-2px);
         }
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+        
         .info-section {
             background: white;
             border-radius: 12px;
@@ -110,23 +131,22 @@
             font-size: 20px;
             font-weight: 600;
         }
-        .info-section p { 
-            color: #666; 
-            font-size: 14px; 
-            margin-bottom: 12px;
-            line-height: 1.8;
+        
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
         }
-        .info-section strong { color: #333; }
-        .code-block {
-            background: #f5f5f5;
+        .workflow-step {
+            background: #f9f9f9;
             padding: 16px;
-            border-radius: 6px;
-            font-family: 'Courier New', monospace;
-            color: #333;
-            margin: 12px 0;
-            font-size: 13px;
-            overflow-x: auto;
+            border-radius: 8px;
+            border-left: 4px solid #0078D4;
         }
+        .workflow-step strong { color: #0078D4; display: block; margin-bottom: 4px; }
+        .workflow-step p { font-size: 13px; color: #666; }
+        
         .feature-list {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -137,13 +157,31 @@
             background: #f9f9f9;
             padding: 16px;
             border-radius: 8px;
-            border-left: 4px solid #0078D4;
+            border-left: 4px solid #107c10;
         }
-        .feature-item p { 
-            margin: 0;
+        .feature-item strong { color: #107c10; }
+        .feature-item p { font-size: 13px; color: #666; margin-top: 4px; }
+        
+        .comparison-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
             font-size: 13px;
-            color: #333;
         }
+        .comparison-table th {
+            background: #0078D4;
+            color: white;
+            font-weight: 600;
+        }
+        .comparison-table tr:hover { background: #f9f9f9; }
+        .comparison-table td strong { color: #0078D4; }
+        
         .footer {
             text-align: center;
             color: white;
@@ -152,10 +190,11 @@
             padding-top: 24px;
             border-top: 1px solid rgba(255,255,255,0.2);
         }
+        
         @media (max-width: 768px) {
             .header { padding: 40px 24px; }
             .header h1 { font-size: 32px; }
-            .links { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
             .info-section { padding: 24px; }
         }
     </style>
@@ -164,132 +203,227 @@
     <div class="container">
         <div class="header">
             <div class="header-icon">📊</div>
-            <h1>CS Team Tracker</h1>
-            <p>Internal POC - Customer Support Team Activity Tracker</p>
-            <div class="status-badge">✅ Version 1.0 | Status: Production Ready</div>
+            <h1>CS Team Tracker Advanced</h1>
+            <p>Sistema Avanzado de Tracking con Planificación, Ejecución y Análisis Comparativo</p>
+            <div class="status-badge">✅ v2.0 | Planificación + Ejecución + Análisis | Production Ready</div>
         </div>
 
-        <div class="links">
-            <a href="CS_Team_Tracker_Connected.html" class="link-card">
+        <div class="features-grid">
+            <a href="CS_Team_Tracker_Advanced.html" class="feature-card">
                 <div>
-                    <div class="link-card-icon">🖥️</div>
-                    <h2>Web Interface</h2>
-                    <p>Open the interactive dashboard. Real-time data sync from Excel with Kanban board, metrics, and team progress tracking.</p>
+                    <div class="feature-icon">📋</div>
+                    <h2>Sistema Completo</h2>
+                    <span class="badge">Todas las características</span>
+                    <p>Acceso a todas las áreas: Planificación, Ejecución, Comparativo y Kanban. Todo integrado en un solo sistema.</p>
                 </div>
-                <button class="btn">Open Dashboard →</button>
+                <button class="btn">Abrir Sistema →</button>
             </a>
 
-            <a href="https://raw.githubusercontent.com/Dalexcasteneda/cs-team-tracker/main/CS_Team_Weekly_Tracker.xlsx" class="link-card">
+            <a href="https://raw.githubusercontent.com/Dalexcasteneda/cs-team-tracker/main/CS_Team_Weekly_Tracker_Advanced.xlsx" class="feature-card">
                 <div>
-                    <div class="link-card-icon">📊</div>
-                    <h2>Excel File</h2>
-                    <p>Download the tracker data. Contains all sheets for agents, weekly planning, dashboard, and instructions.</p>
+                    <div class="feature-icon">📊</div>
+                    <h2>Excel Actualizado</h2>
+                    <span class="badge">Descargable</span>
+                    <p>Excel con todas las hojas: Weekly Plan, Agentes, Dashboard, y guías. Listo para usar como backup.</p>
                 </div>
-                <button class="btn">Download File →</button>
+                <button class="btn">Descargar Excel →</button>
             </a>
 
-            <a href="README.md" class="link-card">
+            <a href="README.md" class="feature-card">
                 <div>
-                    <div class="link-card-icon">📖</div>
-                    <h2>Documentation</h2>
-                    <p>Complete guide with setup instructions, team workflows, features, and technical details.</p>
+                    <div class="feature-icon">📖</div>
+                    <h2>Documentación</h2>
+                    <span class="badge">Guía completa</span>
+                    <p>Documentación técnica, flujos de trabajo, casos de uso y arquitectura del sistema.</p>
                 </div>
-                <button class="btn">Read Docs →</button>
+                <button class="btn">Leer Docs →</button>
             </a>
         </div>
 
         <div class="info-section">
-            <h3>🚀 Quick Start</h3>
-            <p><strong>For Coordinators:</strong></p>
-            <p>1. Click "Open Dashboard" above to view the web interface</p>
-            <p>2. Click "Refresh Data" button to load tasks from Excel</p>
-            <p>3. Monitor team progress in real-time</p>
-            <p>4. Share updated Excel with team members</p>
-
-            <p style="margin-top: 20px;"><strong>For Agents (Elías, Gabriela, Jacqueline):</strong></p>
-            <p>1. Download the Excel file (button above)</p>
-            <p>2. Open your personal sheet</p>
-            <p>3. Log daily activity (date, task, hours, status)</p>
-            <p>4. Upload updated file back to GitHub</p>
-        </div>
-
-        <div class="info-section">
-            <h3>📊 System Architecture</h3>
-            <div class="code-block">
-Excel File (GitHub)
-     ↓
-HTML Interface reads Excel
-     ↓
-XLSX.js library processes data
-     ↓
-Dashboard displays in real-time
-            </div>
-        </div>
-
-        <div class="info-section">
-            <h3>✨ Key Features</h3>
+            <h3>🚀 Características Principales</h3>
             <div class="feature-list">
                 <div class="feature-item">
-                    <p>✅ <strong>Real-time Sync</strong> - HTML reads Excel automatically</p>
+                    <strong>📋 Planificación Semanal</strong>
+                    <p>Estima capacidad por agente y tipo de actividad. Base para comparación.</p>
                 </div>
                 <div class="feature-item">
-                    <p>✅ <strong>Kanban Board</strong> - Visual task layout by day</p>
+                    <strong>📝 Ejecución Diaria</strong>
+                    <p>Cada agente registra su trabajo: horas, subtareas, estado y comentarios.</p>
                 </div>
                 <div class="feature-item">
-                    <p>✅ <strong>Auto Metrics</strong> - Completion %, hours, priority</p>
+                    <strong>📊 Análisis Comparativo</strong>
+                    <p>Compara automáticamente planeado vs realizado. Identifica desviaciones.</p>
                 </div>
                 <div class="feature-item">
-                    <p>✅ <strong>Team Progress</strong> - Individual agent statistics</p>
+                    <strong>📌 Insights Automáticos</strong>
+                    <p>Detecta sobrecarga, cambios de scope y genera recomendaciones.</p>
                 </div>
                 <div class="feature-item">
-                    <p>✅ <strong>GitHub Hosted</strong> - No servers, 100% GitHub</p>
+                    <strong>🎯 Kanban Visual</strong>
+                    <p>Visualiza todas las tareas por estado de avance en tiempo real.</p>
                 </div>
                 <div class="feature-item">
-                    <p>✅ <strong>Refresh Button</strong> - One-click data update</p>
+                    <strong>📈 Reportes</strong>
+                    <p>Crea reportes para stakeholders basados en datos reales de ejecución.</p>
                 </div>
             </div>
         </div>
 
         <div class="info-section">
-            <h3>📋 Weekly Workflow</h3>
-            <p><strong>Friday EOD:</strong> Edit Excel → Add all tasks for next week → Upload to GitHub</p>
-            <p><strong>Monday-Friday:</strong> Agents log daily activity in their sheets → Upload updates</p>
-            <p><strong>Daily:</strong> Coordinator opens dashboard → Click "Refresh Data" → Monitor progress</p>
-            <p><strong>Thursday 5 PM:</strong> Screenshot dashboard metrics → Create weekly report</p>
+            <h3>📋 Flujo Semanal Completo</h3>
+            <div class="workflow-grid">
+                <div class="workflow-step">
+                    <strong>LUNES 9 AM</strong>
+                    <p>Coordinador estima capacidad en "Planificación Semanal" para cada agente.</p>
+                </div>
+                <div class="workflow-step">
+                    <strong>LUNES-VIERNES</strong>
+                    <p>Agentes registran su ejecución diaria en "Ejecución Diaria".</p>
+                </div>
+                <div class="workflow-step">
+                    <strong>VIERNES 5 PM</strong>
+                    <p>Coordinador analiza "Comparativo Semanal": planeado vs realizado.</p>
+                </div>
+                <div class="workflow-step">
+                    <strong>VIERNES 6 PM</strong>
+                    <p>Ve insights automáticos y crea reporte para stakeholders.</p>
+                </div>
+            </div>
         </div>
 
         <div class="info-section">
-            <h3>🔄 How to Update Data</h3>
-            <p><strong>Option 1: Edit Excel locally</strong></p>
-            <div class="code-block">1. Download Excel from GitHub
-2. Edit in Excel (add/update tasks)
-3. Save file
-4. Upload back to GitHub
-5. In dashboard: Click "Refresh Data"</div>
-
-            <p style="margin-top: 16px;"><strong>Option 2: Edit directly in GitHub</strong></p>
-            <div class="code-block">1. GitHub > CS_Team_Weekly_Tracker.xlsx
-2. Click edit button
-3. Make changes
-4. Commit
-5. In dashboard: Click "Refresh Data"</div>
+            <h3>👥 Cómo Usa Cada Rol</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Rol</th>
+                        <th>Qué Hace</th>
+                        <th>Ve</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Coordinador</strong></td>
+                        <td>Planifica y analiza</td>
+                        <td>✓ Planificación ✓ Ejecución ✓ Comparativo ✓ Insights</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Elías Zapata</strong></td>
+                        <td>Registra su trabajo</td>
+                        <td>✓ Sus tareas ✓ Ejecución diaria ✓ Kanban</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gabriela Cader</strong></td>
+                        <td>Registra su trabajo</td>
+                        <td>✓ Sus tareas ✓ Ejecución diaria ✓ Kanban</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Jacqueline Estrada</strong></td>
+                        <td>Registra su trabajo</td>
+                        <td>✓ Sus tareas ✓ Ejecución diaria ✓ Kanban</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="info-section">
-            <h3>📱 Browser Support</h3>
-            <p>✅ Chrome/Chromium | ✅ Microsoft Edge | ✅ Firefox | ✅ Safari</p>
+            <h3>💡 Ejemplo de Uso</h3>
+            <p style="color: #666; margin-bottom: 16px;">
+                <strong>Escenario:</strong> Martes llega solicitud urgente de cliente "Revisar 50 FAQs antes del viernes"
+            </p>
+            <p style="color: #666; margin-bottom: 16px;">
+                <strong>Qué pasa:</strong>
+            </p>
+            <ul style="color: #666; margin-bottom: 16px; margin-left: 20px;">
+                <li>Gabriela cambia su trabajo para atender la solicitud</li>
+                <li>Registra diariamente qué hizo (FAQs, horas, estado)</li>
+                <li>El sistema detecta que Shopping Cart se atrasó</li>
+                <li>Viernes: Comparativo muestra "Gabriela trabajó 5h extra por solicitud"</li>
+                <li>Coordinador crea reporte: "Cambio de scope detectado. Necesitamos replantificar shopping cart"</li>
+            </ul>
+            <p style="color: #666; margin-bottom: 16px;">
+                <strong>Resultado:</strong> Decisión informada basada en datos reales de ejecución.
+            </p>
         </div>
 
         <div class="info-section">
-            <h3>🔐 Data Security</h3>
-            <p><strong>Excel Storage:</strong> GitHub (private repository option available)</p>
-            <p><strong>Web Interface:</strong> GitHub Pages (no server, no data collection)</p>
-            <p><strong>Overall:</strong> 100% within GitHub, enterprise-grade security</p>
+            <h3>📊 Comparativa: Antes vs Ahora</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Característica</th>
+                        <th>Antes</th>
+                        <th>Ahora (Advanced)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Planificación</strong></td>
+                        <td>Manual, sin datos</td>
+                        <td>✓ Basada en capacidad real</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Seguimiento</strong></td>
+                        <td>Solo ejecución</td>
+                        <td>✓ Ejecución + Kanban + Comparativo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Análisis</strong></td>
+                        <td>Ninguno</td>
+                        <td>✓ Automático de variaciones</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cambios de Scope</strong></td>
+                        <td>No detectados</td>
+                        <td>✓ Identificados automáticamente</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reportes</strong></td>
+                        <td>Manuales, sin datos</td>
+                        <td>✓ Automáticos con datos reales</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mejora Continua</strong></td>
+                        <td>No hay historial</td>
+                        <td>✓ Histórico semanal para mejorar</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="info-section">
+            <h3>✨ Beneficios</h3>
+            <p style="color: #666; margin-bottom: 16px;">
+                <strong>Para el Coordinador:</strong> Identifica sobrecarga automáticamente, detecta cambios de scope, justifica recursos a gerencia, crea reportes con datos reales.
+            </p>
+            <p style="color: #666; margin-bottom: 16px;">
+                <strong>Para los Agentes:</strong> Entienden su carga real, mejoran estimaciones futuras, documentan su trabajo con precisión.
+            </p>
+            <p style="color: #666;">
+                <strong>Para la Organización:</strong> Data para decisiones, base para SLAs, histórico para presupuesto, mejora continua visible.
+            </p>
+        </div>
+
+        <div class="info-section">
+            <h3>🎯 Próximos Pasos</h3>
+            <p style="color: #666; margin-bottom: 16px;">
+                <strong>1. Hoy:</strong> Abre "Sistema Completo" y familiarízate con las 4 áreas.
+            </p>
+            <p style="color: #666; margin-bottom: 16px;">
+                <strong>2. Lunes próximo:</strong> Abre "Planificación Semanal" y estima para cada agente.
+            </p>
+            <p style="color: #666; margin-bottom: 16px;">
+                <strong>3. Lunes-Viernes:</strong> Agentes registran su ejecución diaria.
+            </p>
+            <p style="color: #666;">
+                <strong>4. Viernes:</strong> Abre "Comparativo Semanal" y analiza variaciones.
+            </p>
         </div>
 
         <div class="footer">
-            <p>CS Team Tracker v1.0 | Last updated: April 30, 2026</p>
-            <p>All files hosted on GitHub | GitHub Pages | No external dependencies</p>
+            <p>CS Team Tracker Advanced v2.0 | Sistema Completo de Planificación, Ejecución y Análisis</p>
+            <p>100% alojado en GitHub | Gratis | Sin dependencias | Enterprise-Ready</p>
         </div>
     </div>
 </body>
