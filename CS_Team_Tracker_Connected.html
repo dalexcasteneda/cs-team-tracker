@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS Team Tracker - Connected</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1600px; margin: 0 auto; }
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        .header h1 { color: #0078D4; margin-bottom: 8px; font-size: 28px; font-weight: 600; }
+        .header p { color: #666; font-size: 14px; }
+        .status {
+            background: #dff6dd;
+            color: #107c10;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            border-left: 4px solid #107c10;
+            font-size: 13px;
+        }
+        .status.loading { background: #fff4ce; color: #8a6600; border-left-color: #ffb81c; }
+        .status.error { background: #fff5f5; color: #d13438; border-left-color: #d13438; }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            background: white;
+            border-radius: 12px;
+            padding: 16px 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            padding: 10px 18px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .tab-btn.active { color: #0078D4; border-bottom-color: #0078D4; }
+        .panel { display: none; }
+        .panel.active { display: block; }
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .kanban-column {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            min-height: 650px;
+        }
+        .kanban-header {
+            background: #0078D4;
+            color: white;
+            padding: 16px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .kanban-body {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #f9f9f9;
+        }
+        .task-card {
+            background: white;
+            border-left: 4px solid #0078D4;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .task-card:hover {
+            background: #f5f5f5;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .task-card.high { border-left-color: #d13438; background: #fff5f5; }
+        .task-card.medium { border-left-color: #ffb81c; background: #fffaf0; }
+        .task-card.low { border-left-color: #107c10; background: #f6fff3; }
+        .task-agent { font-weight: 600; color: #0078D4; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; }
+        .task-title { font-size: 13px; color: #333; font-weight: 500; margin-bottom: 6px; word-break: break-word; }
+        .task-hours { font-size: 11px; color: #666; margin-bottom: 6px; }
+        .task-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            background: #e0e0e0;
+            color: #333;
+        }
+        .task-status.completed { background: #107c10; color: white; }
+        .task-status.in-progress { background: #ffb81c; color: #333; }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .metric-value { font-size: 36px; font-weight: 700; color: #0078D4; margin-bottom: 8px; }
+        .metric-label { font-size: 12px; color: #666; font-weight: 500; }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        .progress-fill { height: 100%; background: #0078D4; transition: width 0.3s; }
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            background: #0078D4;
+            color: white;
+        }
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+        }
+        tr:hover { background: #f5f5f5; }
+        .refresh-btn {
+            background: #0078D4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .refresh-btn:hover { background: #106ebe; }
+        @media (max-width: 1200px) { .kanban-board { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .kanban-board { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 CS Team Tracker - Connected to GitHub Excel</h1>
+            <p>Data synced from: CS_Team_Weekly_Tracker.xlsx</p>
+            <div class="status loading" id="status">
+                ⏳ Loading data from GitHub...
+            </div>
+        </div>
+
+        <button class="refresh-btn" onclick="loadExcelFromGitHub()">🔄 Refresh Data</button>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('kanban')">📋 Kanban</button>
+            <button class="tab-btn" onclick="switchTab('dashboard')">📊 Dashboard</button>
+            <button class="tab-btn" onclick="switchTab('team')">👥 Team</button>
+        </div>
+
+        <!-- KANBAN -->
+        <div class="panel active" id="tab-kanban">
+            <div class="kanban-board" id="kanban-board"></div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div class="panel" id="tab-dashboard">
+            <div class="dashboard-grid">
+                <div class="metric-card">
+                    <div class="metric-value" id="total-tasks">0</div>
+                    <div class="metric-label">Total Tasks</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="completed-tasks">0</div>
+                    <div class="metric-label">Completed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="in-progress-tasks">0</div>
+                    <div class="metric-label">In Progress</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="completion-percent">0%</div>
+                    <div class="metric-label">Completion %</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                <h2 style="color: #0078D4; margin-bottom: 20px; font-size: 18px;">Weekly Summary</h2>
+                <div id="summary-text" style="font-size: 14px; line-height: 1.6; color: #333;"></div>
+            </div>
+        </div>
+
+        <!-- TEAM -->
+        <div class="panel" id="tab-team">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Agent</th>
+                        <th style="text-align: center;">Tasks</th>
+                        <th style="text-align: center;">Completed</th>
+                        <th style="text-align: center;">Hours</th>
+                        <th style="text-align: center;">Progress</th>
+                    </tr>
+                </thead>
+                <tbody id="team-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let tasks = [];
+        const agents = ['Elías Zapata', 'Gabriela Cader', 'Jacqueline Estrada'];
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+        async function loadExcelFromGitHub() {
+            const statusEl = document.getElementById('status');
+            
+            try {
+                statusEl.className = 'status loading';
+                statusEl.textContent = '⏳ Loading Excel from GitHub...';
+
+                // URL cruda del archivo Excel en GitHub
+                const excelUrl = 'https://raw.githubusercontent.com/Dalexcasteneda/cs-team-tracker/main/CS_Team_Weekly_Tracker.xlsx';
+
+                // Descargar archivo
+                const response = await fetch(excelUrl);
+                if (!response.ok) throw new Error('Failed to download Excel');
+
+                const arrayBuffer = await response.arrayBuffer();
+
+                // Leer Excel
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                const worksheet = workbook.Sheets['Weekly Plan'];
+
+                if (!worksheet) throw new Error('Weekly Plan sheet not found');
+
+                // Convertir a JSON
+                const data = XLSX.utils.sheet_to_json(worksheet);
+
+                // Procesar datos
+                tasks = data.map((row, idx) => ({
+                    id: idx,
+                    agent: row.Agent || '',
+                    type: row['Task Type'] || '',
+                    description: row.Description || '',
+                    day: row.Day || '',
+                    hours: parseFloat(row.Hours) || 0,
+                    priority: row.Priority || 'Medium',
+                    status: row.Status || 'Pending',
+                    comments: row.Comments || ''
+                })).filter(t => t.agent && t.description);
+
+                render();
+
+                statusEl.className = 'status';
+                statusEl.textContent = `✅ Data loaded successfully (${tasks.length} tasks)`;
+
+            } catch (error) {
+                statusEl.className = 'status error';
+                statusEl.textContent = `❌ Error: ${error.message}. Make sure the Excel file is in GitHub.`;
+                console.error('Error loading Excel:', error);
+            }
+        }
+
+        function render() {
+            renderKanban();
+            updateDashboard();
+            updateTeam();
+        }
+
+        function renderKanban() {
+            const board = document.getElementById('kanban-board');
+            board.innerHTML = '';
+
+            days.forEach(day => {
+                const dayTasks = tasks.filter(t => t.day === day);
+                const col = document.createElement('div');
+                col.className = 'kanban-column';
+
+                let html = `
+                    <div class="kanban-header">
+                        ${day}
+                        <div style="font-size: 11px; opacity: 0.9; margin-top: 4px;">${dayTasks.length} tasks · ${dayTasks.reduce((s, t) => s + t.hours, 0)}h</div>
+                    </div>
+                    <div class="kanban-body">
+                `;
+
+                dayTasks.forEach(t => {
+                    html += `
+                        <div class="task-card ${t.priority.toLowerCase()}">
+                            <div class="task-agent">${t.agent}</div>
+                            <div class="task-title">${t.description}</div>
+                            <div class="task-hours">${t.type} • ${t.hours}h</div>
+                            <span class="task-status ${t.status === 'Completed' ? 'completed' : t.status === 'In Progress' ? 'in-progress' : ''}">
+                                ${t.status === 'Completed' ? '✓' : t.status === 'In Progress' ? 'Progress' : 'Pending'}
+                            </span>
+                        </div>
+                    `;
+                });
+
+                html += '</div>';
+                col.innerHTML = html;
+                board.appendChild(col);
+            });
+        }
+
+        function updateDashboard() {
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.status === 'Completed').length;
+            const inProgress = tasks.filter(t => t.status === 'In Progress').length;
+            const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+            const hours = tasks.reduce((s, t) => s + t.hours, 0);
+
+            document.getElementById('total-tasks').textContent = total;
+            document.getElementById('completed-tasks').textContent = completed;
+            document.getElementById('in-progress-tasks').textContent = inProgress;
+            document.getElementById('completion-percent').textContent = percent + '%';
+            document.getElementById('progress-fill').style.width = percent + '%';
+            document.getElementById('summary-text').innerHTML = `
+                This week: <strong>${total} tasks</strong> with <strong>${hours}h</strong> total.
+                <strong>${completed}/${total}</strong> completed (${percent}%).
+                <strong>${inProgress}</strong> in progress.
+            `;
+        }
+
+        function updateTeam() {
+            const tbody = document.getElementById('team-tbody');
+            tbody.innerHTML = '';
+
+            agents.forEach(agent => {
+                const agentTasks = tasks.filter(t => t.agent === agent);
+                const completed = agentTasks.filter(t => t.status === 'Completed').length;
+                const hours = agentTasks.reduce((s, t) => s + t.hours, 0);
+                const percent = agentTasks.length > 0 ? Math.round((completed / agentTasks.length) * 100) : 0;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${agent}</strong></td>
+                        <td style="text-align: center;">${agentTasks.length}</td>
+                        <td style="text-align: center;">${completed}</td>
+                        <td style="text-align: center;">${hours}h</td>
+                        <td style="text-align: center;">
+                            <div style="width: 100px; margin: 0 auto;">
+                                <div class="progress-bar" style="margin: 0;">
+                                    <div class="progress-fill" style="width: ${percent}%; background: ${percent >= 75 ? '#107c10' : percent >= 50 ? '#ffb81c' : '#d13438'};"></div>
+                                </div>
+                                <span style="font-size: 11px; color: #666;">${percent}%</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function switchTab(name) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + name).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Cargar al abrir
+        window.addEventListener('load', loadExcelFromGitHub);
+    </script>
+</body>
+</html>
