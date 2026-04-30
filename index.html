@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS Team Tracker Advanced - Complete System</title>
+    <title>CS Team Tracker Complete - Full Control System</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -110,13 +110,6 @@
             background: #106ebe;
             transform: translateY(-2px);
         }
-        .btn-secondary {
-            background: #e0e0e0;
-            color: #333;
-        }
-        .btn-secondary:hover {
-            background: #d0d0d0;
-        }
         
         .info-section {
             background: white;
@@ -132,20 +125,20 @@
             font-weight: 600;
         }
         
-        .workflow-grid {
+        .tabs-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 16px;
             margin: 20px 0;
         }
-        .workflow-step {
+        .tab-item {
             background: #f9f9f9;
             padding: 16px;
             border-radius: 8px;
             border-left: 4px solid #0078D4;
         }
-        .workflow-step strong { color: #0078D4; display: block; margin-bottom: 4px; }
-        .workflow-step p { font-size: 13px; color: #666; }
+        .tab-item strong { color: #0078D4; display: block; margin-bottom: 4px; }
+        .tab-item p { font-size: 13px; color: #666; }
         
         .feature-list {
             display: grid;
@@ -161,6 +154,17 @@
         }
         .feature-item strong { color: #107c10; }
         .feature-item p { font-size: 13px; color: #666; margin-top: 4px; }
+        
+        .workflow-section {
+            background: #f5f9ff;
+            border-left: 4px solid #0078D4;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .workflow-section h4 { color: #0078D4; margin-bottom: 12px; }
+        .workflow-section ol { margin-left: 20px; }
+        .workflow-section li { color: #666; font-size: 13px; margin-bottom: 8px; line-height: 1.6; }
         
         .comparison-table {
             width: 100%;
@@ -180,7 +184,6 @@
             font-weight: 600;
         }
         .comparison-table tr:hover { background: #f9f9f9; }
-        .comparison-table td strong { color: #0078D4; }
         
         .footer {
             text-align: center;
@@ -203,227 +206,233 @@
     <div class="container">
         <div class="header">
             <div class="header-icon">📊</div>
-            <h1>CS Team Tracker Advanced</h1>
-            <p>Sistema Avanzado de Tracking con Planificación, Ejecución y Análisis Comparativo</p>
-            <div class="status-badge">✅ v2.0 | Planificación + Ejecución + Análisis | Production Ready</div>
+            <h1>CS Team Tracker Complete</h1>
+            <p>Comprehensive Control System: Weekly Planning + Daily Execution + Kanban + Comparison</p>
+            <div class="status-badge">✅ v3.0 | Complete System | Production Ready</div>
         </div>
 
         <div class="features-grid">
-            <a href="CS_Team_Tracker_Advanced.html" class="feature-card">
+            <a href="CS_Team_Tracker_Complete.html" class="feature-card">
                 <div>
                     <div class="feature-icon">📋</div>
-                    <h2>Sistema Completo</h2>
-                    <span class="badge">Todas las características</span>
-                    <p>Acceso a todas las áreas: Planificación, Ejecución, Comparativo y Kanban. Todo integrado en un solo sistema.</p>
+                    <h2>Complete System</h2>
+                    <span class="badge">All 4 Features</span>
+                    <p>Access all system areas: Daily Execution, Weekly Planning, Visual Kanban, and Weekly Comparison. Everything integrated in one place.</p>
                 </div>
-                <button class="btn">Abrir Sistema →</button>
+                <button class="btn">Open System →</button>
             </a>
 
             <a href="https://raw.githubusercontent.com/Dalexcasteneda/cs-team-tracker/main/CS_Team_Weekly_Tracker_Advanced.xlsx" class="feature-card">
                 <div>
                     <div class="feature-icon">📊</div>
-                    <h2>Excel Actualizado</h2>
-                    <span class="badge">Descargable</span>
-                    <p>Excel con todas las hojas: Weekly Plan, Agentes, Dashboard, y guías. Listo para usar como backup.</p>
+                    <h2>Updated Excel</h2>
+                    <span class="badge">Downloadable</span>
+                    <p>Excel with all sheets: Weekly Plan, Agents, Dashboard, and guides. Ready to use as backup for weekly data.</p>
                 </div>
-                <button class="btn">Descargar Excel →</button>
+                <button class="btn">Download Excel →</button>
             </a>
 
-            <a href="README.md" class="feature-card">
+            <a href="CS_TEAM_TRACKER_COMPLETE_GUIDE_EN.md" class="feature-card">
                 <div>
                     <div class="feature-icon">📖</div>
-                    <h2>Documentación</h2>
-                    <span class="badge">Guía completa</span>
-                    <p>Documentación técnica, flujos de trabajo, casos de uso y arquitectura del sistema.</p>
+                    <h2>Documentation</h2>
+                    <span class="badge">Complete Guide</span>
+                    <p>Technical documentation, workflows, use cases, and system architecture. Everything you need to know.</p>
                 </div>
-                <button class="btn">Leer Docs →</button>
+                <button class="btn">Read Docs →</button>
             </a>
         </div>
 
         <div class="info-section">
-            <h3>🚀 Características Principales</h3>
+            <h3>🎯 4 Complete Tabs</h3>
+            <div class="tabs-grid">
+                <div class="tab-item">
+                    <strong>📝 Daily Execution</strong>
+                    <p>Agents log daily work with dropdowns: hours, subtasks, status, comments.</p>
+                </div>
+                <div class="tab-item">
+                    <strong>📋 Weekly Planning</strong>
+                    <p>View all planned tasks by agent. Real-time updates from daily entries.</p>
+                </div>
+                <div class="tab-item">
+                    <strong>🎯 Visual Kanban</strong>
+                    <p>Progress bars, subtasks completed, percentages. See work flowing in real-time.</p>
+                </div>
+                <div class="tab-item">
+                    <strong>📊 Weekly Comparison</strong>
+                    <p>Planned vs Executed. Automatic variance calculation and scope change detection.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>✨ Key Features</h3>
             <div class="feature-list">
                 <div class="feature-item">
-                    <strong>📋 Planificación Semanal</strong>
-                    <p>Estima capacidad por agente y tipo de actividad. Base para comparación.</p>
+                    <strong>✓ Agent-Friendly Interface</strong>
+                    <p>Simple dropdowns, no complex forms. 5 minutes per day to log work.</p>
                 </div>
                 <div class="feature-item">
-                    <strong>📝 Ejecución Diaria</strong>
-                    <p>Cada agente registra su trabajo: horas, subtareas, estado y comentarios.</p>
+                    <strong>✓ Real-time Synchronization</strong>
+                    <p>Data updates instantly. No reloading needed. localStorage for persistence.</p>
                 </div>
                 <div class="feature-item">
-                    <strong>📊 Análisis Comparativo</strong>
-                    <p>Compara automáticamente planeado vs realizado. Identifica desviaciones.</p>
+                    <strong>✓ Visual Progress Tracking</strong>
+                    <p>Progress bars, percentages, completion status. See work flowing daily.</p>
                 </div>
                 <div class="feature-item">
-                    <strong>📌 Insights Automáticos</strong>
-                    <p>Detecta sobrecarga, cambios de scope y genera recomendaciones.</p>
+                    <strong>✓ Automatic Analysis</strong>
+                    <p>Planned vs Executed automatically calculated. Variance detection and insights.</p>
                 </div>
                 <div class="feature-item">
-                    <strong>🎯 Kanban Visual</strong>
-                    <p>Visualiza todas las tareas por estado de avance en tiempo real.</p>
+                    <strong>✓ Scope Change Detection</strong>
+                    <p>Identify when work exceeds plan. Automatic alerts for overload.</p>
                 </div>
                 <div class="feature-item">
-                    <strong>📈 Reportes</strong>
-                    <p>Crea reportes para stakeholders basados en datos reales de ejecución.</p>
+                    <strong>✓ 100% GitHub Hosted</strong>
+                    <p>No servers, no external dependencies. GitHub Pages + localStorage.</p>
                 </div>
             </div>
         </div>
 
         <div class="info-section">
-            <h3>📋 Flujo Semanal Completo</h3>
-            <div class="workflow-grid">
-                <div class="workflow-step">
-                    <strong>LUNES 9 AM</strong>
-                    <p>Coordinador estima capacidad en "Planificación Semanal" para cada agente.</p>
-                </div>
-                <div class="workflow-step">
-                    <strong>LUNES-VIERNES</strong>
-                    <p>Agentes registran su ejecución diaria en "Ejecución Diaria".</p>
-                </div>
-                <div class="workflow-step">
-                    <strong>VIERNES 5 PM</strong>
-                    <p>Coordinador analiza "Comparativo Semanal": planeado vs realizado.</p>
-                </div>
-                <div class="workflow-step">
-                    <strong>VIERNES 6 PM</strong>
-                    <p>Ve insights automáticos y crea reporte para stakeholders.</p>
-                </div>
+            <h3>📋 Complete Daily Workflow</h3>
+            
+            <h4 style="color: #0078D4; margin-top: 20px; margin-bottom: 12px;">For Agents (5 minutes/day):</h4>
+            <div class="workflow-section">
+                <ol>
+                    <li>Open system and click "Daily Execution"</li>
+                    <li>Select your name from dropdown</li>
+                    <li>For each assigned task:
+                        <ul style="margin-top: 6px; margin-left: 20px;">
+                            <li>Enter hours worked today</li>
+                            <li>Enter subtasks completed</li>
+                            <li>Select status (Pending/In Progress/Completed)</li>
+                            <li>Add comments about blockers or progress</li>
+                        </ul>
+                    </li>
+                    <li>Click "Save Daily Activities"</li>
+                    <li>Data saved automatically, nothing else needed</li>
+                </ol>
+            </div>
+
+            <h4 style="color: #0078D4; margin-top: 20px; margin-bottom: 12px;">For Coordinators (Real-time monitoring):</h4>
+            <div class="workflow-section">
+                <ol>
+                    <li>Monitor "Weekly Planning" - see all tasks per agent</li>
+                    <li>Watch "Kanban" - see progress bars updating daily</li>
+                    <li>Review "Comparison" - see planned vs executed totals</li>
+                    <li>Friday 5 PM: Full weekly report ready with real data</li>
+                </ol>
             </div>
         </div>
 
         <div class="info-section">
-            <h3>👥 Cómo Usa Cada Rol</h3>
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Rol</th>
-                        <th>Qué Hace</th>
-                        <th>Ve</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Coordinador</strong></td>
-                        <td>Planifica y analiza</td>
-                        <td>✓ Planificación ✓ Ejecución ✓ Comparativo ✓ Insights</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Elías Zapata</strong></td>
-                        <td>Registra su trabajo</td>
-                        <td>✓ Sus tareas ✓ Ejecución diaria ✓ Kanban</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Gabriela Cader</strong></td>
-                        <td>Registra su trabajo</td>
-                        <td>✓ Sus tareas ✓ Ejecución diaria ✓ Kanban</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Jacqueline Estrada</strong></td>
-                        <td>Registra su trabajo</td>
-                        <td>✓ Sus tareas ✓ Ejecución diaria ✓ Kanban</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="info-section">
-            <h3>💡 Ejemplo de Uso</h3>
+            <h3>💡 Practical Example</h3>
             <p style="color: #666; margin-bottom: 16px;">
-                <strong>Escenario:</strong> Martes llega solicitud urgente de cliente "Revisar 50 FAQs antes del viernes"
+                <strong>Task:</strong> "Update 20 FAQs of Payments Section" (10 hours planned for Gabriela)
             </p>
             <p style="color: #666; margin-bottom: 16px;">
-                <strong>Qué pasa:</strong>
+                <strong>What Happens:</strong>
             </p>
             <ul style="color: #666; margin-bottom: 16px; margin-left: 20px;">
-                <li>Gabriela cambia su trabajo para atender la solicitud</li>
-                <li>Registra diariamente qué hizo (FAQs, horas, estado)</li>
-                <li>El sistema detecta que Shopping Cart se atrasó</li>
-                <li>Viernes: Comparativo muestra "Gabriela trabajó 5h extra por solicitud"</li>
-                <li>Coordinador crea reporte: "Cambio de scope detectado. Necesitamos replantificar shopping cart"</li>
+                <li><strong>Monday:</strong> Gabriela logs 2.5h, 5 subtasks → Kanban shows 25% progress</li>
+                <li><strong>Tuesday:</strong> Gabriela logs +2h, +4 subtasks → Kanban shows 45% progress</li>
+                <li><strong>Wednesday:</strong> Client requests 10 more FAQs → Gabriela updates work</li>
+                <li><strong>Thursday:</strong> Gabriela logs +3h, +6 subtasks → System detects scope change</li>
+                <li><strong>Friday 5 PM:</strong> Coordinator sees: Planned 35h total, but gained 10 extra FAQs</li>
+                <li><strong>Report:</strong> "Scope increased by client request. Gabriela delivered 30 FAQs in 28h"</li>
             </ul>
-            <p style="color: #666; margin-bottom: 16px;">
-                <strong>Resultado:</strong> Decisión informada basada en datos reales de ejecución.
-            </p>
         </div>
 
         <div class="info-section">
-            <h3>📊 Comparativa: Antes vs Ahora</h3>
+            <h3>📊 Before vs After</h3>
             <table class="comparison-table">
                 <thead>
                     <tr>
-                        <th>Característica</th>
-                        <th>Antes</th>
-                        <th>Ahora (Advanced)</th>
+                        <th>Feature</th>
+                        <th>Before</th>
+                        <th>Now (Complete)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong>Planificación</strong></td>
-                        <td>Manual, sin datos</td>
-                        <td>✓ Basada en capacidad real</td>
+                        <td><strong>Daily Entry</strong></td>
+                        <td>Manual Excel editing</td>
+                        <td>✓ Simple dropdowns in web interface</td>
                     </tr>
                     <tr>
-                        <td><strong>Seguimiento</strong></td>
-                        <td>Solo ejecución</td>
-                        <td>✓ Ejecución + Kanban + Comparativo</td>
+                        <td><strong>Planning View</strong></td>
+                        <td>Hidden in Excel</td>
+                        <td>✓ Clear visual by agent</td>
                     </tr>
                     <tr>
-                        <td><strong>Análisis</strong></td>
-                        <td>Ninguno</td>
-                        <td>✓ Automático de variaciones</td>
+                        <td><strong>Progress Tracking</strong></td>
+                        <td>None</td>
+                        <td>✓ Real-time Kanban with progress bars</td>
                     </tr>
                     <tr>
-                        <td><strong>Cambios de Scope</strong></td>
-                        <td>No detectados</td>
-                        <td>✓ Identificados automáticamente</td>
+                        <td><strong>Analysis</strong></td>
+                        <td>Manual calculation</td>
+                        <td>✓ Automatic comparison + insights</td>
                     </tr>
                     <tr>
-                        <td><strong>Reportes</strong></td>
-                        <td>Manuales, sin datos</td>
-                        <td>✓ Automáticos con datos reales</td>
+                        <td><strong>Scope Changes</strong></td>
+                        <td>Not visible</td>
+                        <td>✓ Automatically detected and reported</td>
                     </tr>
                     <tr>
-                        <td><strong>Mejora Continua</strong></td>
-                        <td>No hay historial</td>
-                        <td>✓ Histórico semanal para mejorar</td>
+                        <td><strong>Reporting</strong></td>
+                        <td>No real data</td>
+                        <td>✓ Reports with actual execution data</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div class="info-section">
-            <h3>✨ Beneficios</h3>
-            <p style="color: #666; margin-bottom: 16px;">
-                <strong>Para el Coordinador:</strong> Identifica sobrecarga automáticamente, detecta cambios de scope, justifica recursos a gerencia, crea reportes con datos reales.
-            </p>
-            <p style="color: #666; margin-bottom: 16px;">
-                <strong>Para los Agentes:</strong> Entienden su carga real, mejoran estimaciones futuras, documentan su trabajo con precisión.
-            </p>
-            <p style="color: #666;">
-                <strong>Para la Organización:</strong> Data para decisiones, base para SLAs, histórico para presupuesto, mejora continua visible.
-            </p>
+            <h3>🚀 Quick Start</h3>
+            <div class="workflow-section">
+                <p><strong>Today:</strong> Open "Complete System" and explore all 4 tabs</p>
+                <p style="margin-top: 12px;"><strong>Monday:</strong> Agents start logging daily work in "Daily Execution"</p>
+                <p style="margin-top: 12px;"><strong>Daily:</strong> Coordinators monitor "Kanban" for progress</p>
+                <p style="margin-top: 12px;"><strong>Friday:</strong> Review "Comparison" for weekly report</p>
+            </div>
         </div>
 
         <div class="info-section">
-            <h3>🎯 Próximos Pasos</h3>
-            <p style="color: #666; margin-bottom: 16px;">
-                <strong>1. Hoy:</strong> Abre "Sistema Completo" y familiarízate con las 4 áreas.
-            </p>
-            <p style="color: #666; margin-bottom: 16px;">
-                <strong>2. Lunes próximo:</strong> Abre "Planificación Semanal" y estima para cada agente.
-            </p>
-            <p style="color: #666; margin-bottom: 16px;">
-                <strong>3. Lunes-Viernes:</strong> Agentes registran su ejecución diaria.
-            </p>
-            <p style="color: #666;">
-                <strong>4. Viernes:</strong> Abre "Comparativo Semanal" y analiza variaciones.
-            </p>
+            <h3>✅ Who Uses What</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Role</th>
+                        <th>Primary Use</th>
+                        <th>Features</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Agents</strong><br>(Elías, Gabriela, Jacqueline)</td>
+                        <td>Log daily work</td>
+                        <td>Daily Execution tab + Kanban view</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Coordinator</strong></td>
+                        <td>Monitor & report</td>
+                        <td>All 4 tabs (Planning, Execution, Kanban, Comparison)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Management</strong></td>
+                        <td>Weekly reports</td>
+                        <td>Comparison data + insights</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="footer">
-            <p>CS Team Tracker Advanced v2.0 | Sistema Completo de Planificación, Ejecución y Análisis</p>
-            <p>100% alojado en GitHub | Gratis | Sin dependencias | Enterprise-Ready</p>
+            <p>CS Team Tracker Complete v3.0 | Comprehensive Control System</p>
+            <p>100% hosted on GitHub | Free | No external dependencies | Enterprise-Ready</p>
         </div>
     </div>
 </body>
